@@ -49,6 +49,16 @@ const TotalPieChart = () => {
 
     // draw pie chart
 
+    // add 학생총점 text
+    const numberDOM = chartGroup
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("font-weight", 700)
+      .attr("font-size", "2.055em")
+      .attr("dy", ".3em");
+
+    // numberDOM.text(학생총점);
+
     chartGroup
       .append("g")
       .selectAll("path")
@@ -59,14 +69,14 @@ const TotalPieChart = () => {
         return i > 0 ? "none" : "#F4B34B";
       })
       .transition()
-      .delay(function (d, i) {
-        return i * 500;
-      })
+
       .duration(1000)
       .attrTween("d", function (d) {
-        const i = d3.interpolate(d.startAngle, d.endAngle);
+        const interpolateGage = d3.interpolate(d.startAngle, d.endAngle);
+        const interpolateText = d3.interpolate(0, 학생총점);
         return function (t) {
-          d.endAngle = i(t);
+          numberDOM.text(d3.format(",d")(interpolateText(t)));
+          d.endAngle = interpolateGage(t);
           return arc(59.625, 72.25)
             .startAngle(-d.startAngle)
             .endAngle(-d.endAngle)
@@ -84,9 +94,6 @@ const TotalPieChart = () => {
         return i > 0 ? "none" : "#9799F7";
       })
       .transition()
-      .delay(function (d, i) {
-        return i * 500;
-      })
       .duration(1000)
       .attrTween("d", function (d) {
         const i = d3.interpolate(d.startAngle, d.endAngle);
@@ -98,16 +105,6 @@ const TotalPieChart = () => {
             .cornerRadius(10)();
         };
       });
-
-    // add 학생총점 text
-    const numberDOM = chartGroup
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("font-weight", 700)
-      .attr("font-size", "2.055em")
-      .attr("dy", ".3em");
-
-    numberDOM.text(학생총점);
 
     // draw label
     const labelGroup = svg
